@@ -55,6 +55,10 @@ button:hover::before {
   padding: 0.125rem;
 }
 
+#submitButton {
+  margin-top: 1rem;
+}
+
 input {
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
@@ -73,9 +77,13 @@ input:hover {
   padding: 0.5rem 0.75rem 0.3125rem 0.75rem;
 }
 
+#articleRecommendationForm {
+  margin-top: 2rem;
+}
+
 table {
   border-collapse: collapse;
-  width: 48rem;
+  width: 60rem;
   max-width: 100%;
   margin: auto;
   text-align: left;
@@ -94,6 +102,18 @@ table th {
   padding: 0.75rem 0.5rem;
   background-color: #216869;
   color: #fff;
+}
+
+table .titleColumn {
+  width: 70%;
+}
+
+table .publicationColumn {
+  width: 20%;
+}
+
+table .scoreColumn {
+  width: 10%;
 }
 
 @media screen and (max-width: 768px) {

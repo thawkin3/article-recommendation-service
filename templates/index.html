@@ -19,6 +19,36 @@
 <body>
   <h1>Article Recommendation Service</h1>
   <p>This machine learning app is built using <a href="https://www.python.org/doc/">Python</a>, <a href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a>, and the <a href="https://www.pinecone.io/">Pinecone SDK</a>.</p>
+  <p>Select any of the 10 articles below. We'll treat these as your past reading history.</p>
+  <p>Then, click the Submit button to find related articles!</p>
+
+  <form id="articleRecommendationForm">
+    <div><label><input type="checkbox" name="history" id="article1" /> Article 1</label></div>
+    <div><label><input type="checkbox" name="history" id="article2" /> Article 2</label></div>
+    <div><label><input type="checkbox" name="history" id="article3" /> Article 3</label></div>
+    <div><label><input type="checkbox" name="history" id="article4" /> Article 4</label></div>
+    <div><label><input type="checkbox" name="history" id="article5" /> Article 5</label></div>
+    <div><label><input type="checkbox" name="history" id="article6" /> Article 6</label></div>
+    <div><label><input type="checkbox" name="history" id="article7" /> Article 7</label></div>
+    <div><label><input type="checkbox" name="history" id="article8" /> Article 8</label></div>
+    <div><label><input type="checkbox" name="history" id="article9" /> Article 9</label></div>
+    <div><label><input type="checkbox" name="history" id="article10" /> Article 10</label></div>
+    <div><button type="submit" id="submitButton">Submit</button></div>
+  </form>
+
+  <div id="resultsContainer" style="display: none;">
+    <h2>Related articles:</h2>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col" class="titleColumn">Title</th>
+          <th scope="col" class="publicationColumn">Publication</th>
+          <th scope="col" class="scoreColumn">Match Score</th>
+        </tr>
+      </thead>
+      <tbody id="resultsTableBody"></tbody>
+    </table>
+  </div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

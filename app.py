@@ -10,6 +10,7 @@ import pinecone
 import re
 import requests
 from sentence_transformers import SentenceTransformer
+from statistics import mean
 import swifter
 
 app = Flask(__name__)
@@ -40,29 +41,22 @@ def create_model():
 
 def prepare_data(data):
     # rename id column and remove unnecessary columns
-    print("Preparing data...")
     data.rename(columns={"Unnamed: 0": "article_id"}, inplace = True)
     data.drop(columns=['date'], inplace = True)
 
     # extract only first few sentences of each article for quicker vector calculations
     data['content'] = data['content'].fillna('')
     data['content'] = data.content.swifter.apply(lambda x: ' '.join(re.split(r'(?<=[.:;])\s', x)[:4]))
-    data['title_and_content'] = data['title'] + data['content']
+    data['title_and_content'] = data['title'] + ' ' + data['content']
 
     # create a vector embedding based on title and article columns
-    print('Encoding articles...')
     encoded_articles = model.encode(data['title_and_content'], show_progress_bar=True)
     data['article_vector'] = pd.Series(encoded_articles.tolist())
 
     return data
 
 def upload_items(data):
-    print("Uploading items")
-
-    # create a list of items for upload
-    items_to_upload = [(row.id, row.article_vector) for i,row in data.iterrows()]
-
-    # upsert
+    items_to_upload = [(row.id, row.article_vector) for i, row in data.iterrows()]
     pinecone_index.upsert(items=items_to_upload)
 
 def process_file(filename):
@@ -74,12 +68,57 @@ def process_file(filename):
 
     return data
 
+def map_titles(data):
+    return dict(zip(uploaded_data.id, uploaded_data.title))
+
+def map_publications(data):
+    return dict(zip(uploaded_data.id, uploaded_data.publication))
+
+# def query_pinecone(reading_history):
+def query_pinecone():
+    # hard-coded stuff - start
+    sport_user = uploaded_data.loc[uploaded_data['content'].str.contains('tennis')][:10]
+
+    print('\nHere is the example of previously read articles by this user:\n')
+    print(sport_user[['title', 'content', 'publication']])
+
+    a = sport_user['article_vector']
+    sport_user_vector = [*map(mean, zip(*a))]
+    # hard-coded stuff - end
+
+    query_results = pinecone_index.query(queries=[sport_user_vector], top_k=10)
+    res = query_results[0]
+
+    results_list = []
+
+    for idx, _id in enumerate(res.ids):
+        results_list.append({
+            "id": _id,
+            "title": titles_mapped[int(_id)],
+            "publication": publications_mapped[int(_id)],
+            "score": res.scores[idx],
+        })
+
+    return json.dumps(results_list)
+
 initialize_pinecone()
 delete_existing_pinecone_index()
 pinecone_index = create_pinecone_index()
 model = create_model()
 uploaded_data = process_file(filename=DATA_FILE)
+titles_mapped = map_titles(uploaded_data)
+publications_mapped = map_publications(uploaded_data)
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/api/search", methods=["POST", "GET"])
+def search():
+    if request.method == "POST":
+        # return query_pinecone(request.form.history)
+        return query_pinecone()
+    if request.method == "GET":
+        # return query_pinecone(request.args.get("history", ""))
+        return query_pinecone()
+    return "Only GET and POST methods are allowed for this endpoint"
