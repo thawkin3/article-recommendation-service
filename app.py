@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 PINECONE_INDEX_NAME = "article-recommendation-service"
 DATA_FILE = "articles.csv"
-NROWS = 1000
+NROWS = 20000
 
 def initialize_pinecone():
     load_dotenv()
@@ -64,7 +64,6 @@ def process_file(filename):
     data = prepare_data(data)
     upload_items(data)
     pinecone_index.info()
-    print(data.head())
 
     return data
 
@@ -74,19 +73,14 @@ def map_titles(data):
 def map_publications(data):
     return dict(zip(uploaded_data.id, uploaded_data.publication))
 
-# def query_pinecone(reading_history):
-def query_pinecone():
-    # hard-coded stuff - start
-    sport_user = uploaded_data.loc[uploaded_data['content'].str.contains('tennis')][:10]
+def query_pinecone(reading_history_ids):
+    reading_history_ids_list = list(map(int, reading_history_ids.split(',')))
+    reading_history_articles = uploaded_data.loc[uploaded_data['id'].isin(reading_history_ids_list)]
 
-    print('\nHere is the example of previously read articles by this user:\n')
-    print(sport_user[['title', 'content', 'publication']])
+    article_vectors = reading_history_articles['article_vector']
+    reading_history_vector = [*map(mean, zip(*article_vectors))]
 
-    a = sport_user['article_vector']
-    sport_user_vector = [*map(mean, zip(*a))]
-    # hard-coded stuff - end
-
-    query_results = pinecone_index.query(queries=[sport_user_vector], top_k=10)
+    query_results = pinecone_index.query(queries=[reading_history_vector], top_k=10)
     res = query_results[0]
 
     results_list = []
@@ -116,9 +110,7 @@ def index():
 @app.route("/api/search", methods=["POST", "GET"])
 def search():
     if request.method == "POST":
-        # return query_pinecone(request.form.history)
-        return query_pinecone()
+        return query_pinecone(request.form.history)
     if request.method == "GET":
-        # return query_pinecone(request.args.get("history", ""))
-        return query_pinecone()
+        return query_pinecone(request.args.get("history", ""))
     return "Only GET and POST methods are allowed for this endpoint"

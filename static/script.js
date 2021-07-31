@@ -8,7 +8,9 @@
 
     resultsContainer.style.display = 'none'
 
-    fetch(`/api/search?history=${articleRecommendationForm.history.value}`)
+    const selectedArticles = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(item => item.value)
+
+    fetch(`/api/search?history=${selectedArticles.join(',')}`)
       .then(response => response.json())
       .then(data => {
         const tableBodyContent = data.reduce((output, item) => {

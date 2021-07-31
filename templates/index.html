@@ -23,21 +23,24 @@
   <p>Then, click the Submit button to find related articles!</p>
 
   <form id="articleRecommendationForm">
-    <div><label><input type="checkbox" name="history" id="article1" /> Article 1</label></div>
-    <div><label><input type="checkbox" name="history" id="article2" /> Article 2</label></div>
-    <div><label><input type="checkbox" name="history" id="article3" /> Article 3</label></div>
-    <div><label><input type="checkbox" name="history" id="article4" /> Article 4</label></div>
-    <div><label><input type="checkbox" name="history" id="article5" /> Article 5</label></div>
-    <div><label><input type="checkbox" name="history" id="article6" /> Article 6</label></div>
-    <div><label><input type="checkbox" name="history" id="article7" /> Article 7</label></div>
-    <div><label><input type="checkbox" name="history" id="article8" /> Article 8</label></div>
-    <div><label><input type="checkbox" name="history" id="article9" /> Article 9</label></div>
-    <div><label><input type="checkbox" name="history" id="article10" /> Article 10</label></div>
+    <fieldset>
+      <legend>Past reading history</legend>
+      <div><label><input type="checkbox" name="article1" id="article1" value="34218" />Serena Williams Wins Seventh Wimbledon, Record-Equaling 22nd Major Title</label></div>
+      <div><label><input type="checkbox" name="article2" id="article2" value="17704" />Andy Murray, No. 1 and Newly Knighted, Still Has Room for More</label></div>
+      <div><label><input type="checkbox" name="article3" id="article3" value="35192" />World Series Game 7 Draws Most Viewers for MLB in a Quarter Century</label></div>
+      <div><label><input type="checkbox" name="article4" id="article4" value="17478" />Steelers Crush Dolphins to Set Up a Clash With the Chiefs</label></div>
+      <div><label><input type="checkbox" name="article5" id="article5" value="17960" />George Orwell’s ‘1984’ Is Suddenly a Best-Seller</label></div>
+      <div><label><input type="checkbox" name="article6" id="article6" value="21659" />Samsung Urges Consumers to Stop Using Galaxy Note 7s After Battery Fires</label></div>
+      <div><label><input type="checkbox" name="article7" id="article7" value="21642" />Apple Is Said to Be Rethinking Strategy on Self-Driving Cars</label></div>
+      <div><label><input type="checkbox" name="article8" id="article8" value="17973" />Illegal Voting Claims, and Why They Don’t Hold Up</label></div>
+      <div><label><input type="checkbox" name="article9" id="article9" value="21771" />Gas Prices Surge in South After Pipeline Leak</label></div>
+      <div><label><input type="checkbox" name="article10" id="article10" value="21789" />An English Soccer Club Turns Fantasy Sports Into Reality</label></div>
+    </fieldset>
     <div><button type="submit" id="submitButton">Submit</button></div>
   </form>
 
   <div id="resultsContainer" style="display: none;">
-    <h2>Related articles:</h2>
+    <h2>Related Articles</h2>
     <table>
       <thead>
         <tr>
