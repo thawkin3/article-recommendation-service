@@ -2,6 +2,8 @@
 
 This app is built using Python 3.9+, Flask 2.0+, and Pinecone. It performs a similarity search using the Pinecone SDK to find articles that are similar to ones you've read in the past.
 
+![Demo](./article-recommendation-service.gif)
+
 ## Running the app locally
 
 Begin by cloning this git repo and navigating to the project directory.
